@@ -7,6 +7,7 @@ import matplotlib as mpl
 import scipy.stats as stats
 from scipy.stats import wilcoxon
 
+st.set_page_config(layout="wide")
 
 # CSS to center the elements
 st.markdown(
@@ -23,21 +24,26 @@ st.markdown(
 )
 
 # Centering the headers
-st.markdown("<h1 class='center'>An EsteStyle Streamlit Page</h1>", unsafe_allow_html=True)
-st.markdown("<h1 class='center'>Where Python Wiz Meets Data Viz!</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='center'>An EsteStyle Streamlit Page Where Python Wiz Meets Data Viz!</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='center'></h1>", unsafe_allow_html=True)
 
 st.markdown("<img src='https://1drv.ms/i/s!ArWyPNkF5S-foZspwsary83MhqEWiA?embed=1&width=307&height=307' width='300' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
 
-st.title("Study Design")
+st.markdown("<h1 class='center'> </h1>", unsafe_allow_html=True)
 
-st.write('Subjects were given 16 days of drinking behavior aquisition. On day 17, vehicle and drug groups were assigned. Liquid drinking amounts were measured throughout '
-         'to determine if this behavior responded to the treatment administered.')
+st.markdown("<h1 class='center'>Study Design</h1>", unsafe_allow_html=True)
 
-st.title("Data analysis")
+st.markdown("<h3 class='center'>- Subjects were given 15 days of drinking behavior aquisition</h3>" , unsafe_allow_html=True)
+st.markdown("<h3 class='center'>- Liquid drinking amounts were measured (grams)</h3>", unsafe_allow_html=True)
+st.markdown("<h3 class='center'>- On day 17, vehicle and drug groups were assigned</h3>" , unsafe_allow_html=True)
+st.markdown("<h3 class='center'>- Subjects were given 12 days of drinking behavior with treatment</h3>" , unsafe_allow_html=True)
+st.markdown("<h3 class='center'>- Test groups compared to evaluate if behavior responded to the drug</h3>", unsafe_allow_html=True)
+st.markdown("<h1 class='center'> </h1>", unsafe_allow_html=True)
 
-st.write('All groups were checked for normal distribution of their datasets. Groups were determined as not significantly different from one another upon vehicle or drug assignments.'
-         'Since the datasets were previously determined to not follow a normal distribution, a nonparametric test (Wilcoxon Signed-Rank) was used to determine whether to reject the '
-         'null hypothesis. As a significant difference was found between treatment groups, data per day was also analyzed for statistically significant differences.')
+st.markdown("<img src='https://1drv.ms/i/s!ArWyPNkF5S-foZwe60zUnKrJOCH1Cw?embed=1&width=489&height=251' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
+st.markdown("<h1 class='center'> </h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='center'> </h1>", unsafe_allow_html=True)
+
 
 pre_veh = np.array([[0.3, 3.4, 1.2, 1.4, 3.4, 2.8, 1.5, 0.3],
                 [2.2, 9.9, 5.9, 6, 3.9, 3.4, 1.8, 3.1],
@@ -105,6 +111,8 @@ pre_drug_flat = pre_drg.flatten()
 pst_veh_flat = pst_veh.flatten()
 pst_drug_flat = pst_drg.flatten()
 
+col1, col2, col3, col4, col5 = st.columns([.001, 2.3, 2.3, 3.6, .37], gap="large")
+
 ##### Logic for Q-Q & Histo plots #####
 
 # Function to perform Shapiro-Wilk test and display result
@@ -134,20 +142,25 @@ def plot_data_distribution(data, group_name, point_color='blue'):
     plt.tight_layout()
     return fig
 
-# Streamlit app
-st.title("Q-Q Plot and Shapiro-Wilk Test")
+# Streamlit app column one graphs
 
-st.write(shapiro_test(pre_veh_flat, 'Pre-Treatment (Vehicle)'))
-st.pyplot(plot_data_distribution(pre_veh_flat, 'Pre-Treatment (Vehicle)', point_color='#42A7F5'))
+with col2:
+    st.title("Q-Q Plot & Shapiro-Wilk")
 
-st.write(shapiro_test(pre_drug_flat, 'Pre-Treatment (Drug)'))
-st.pyplot(plot_data_distribution(pre_drug_flat, 'Pre-Treatment (Drug)', point_color='#ed7b7b'))
+    st.write('All groups were checked for normal distribution of their datasets')
+    st.write('')
 
-st.write(shapiro_test(pst_veh_flat, 'Post-Treatment (Vehicle)'))
-st.pyplot(plot_data_distribution(pst_veh_flat, 'Post-Treatment (Vehicle)', point_color='#1879CE'))
+    st.write(shapiro_test(pre_veh_flat, 'Pre-Treatment (Vehicle)'))
+    st.pyplot(plot_data_distribution(pre_veh_flat, 'Pre-Treatment (Vehicle)', point_color='#42A7F5'))
 
-st.write(shapiro_test(pst_drug_flat, 'Post-Treatment (Drug)'))
-st.pyplot(plot_data_distribution(pst_drug_flat, 'Post-Treatment (Drug)', point_color='#FC4F30'))
+    st.write(shapiro_test(pre_drug_flat, 'Pre-Treatment (Drug)'))
+    st.pyplot(plot_data_distribution(pre_drug_flat, 'Pre-Treatment (Drug)', point_color='#ed7b7b'))
+
+    st.write(shapiro_test(pst_veh_flat, 'Post-Treatment (Vehicle)'))
+    st.pyplot(plot_data_distribution(pst_veh_flat, 'Post-Treatment (Vehicle)', point_color='#1879CE'))
+
+    st.write(shapiro_test(pst_drug_flat, 'Post-Treatment (Drug)'))
+    st.pyplot(plot_data_distribution(pst_drug_flat, 'Post-Treatment (Drug)', point_color='#FC4F30'))
 
 
 ##### Logic for Bar plots #####
@@ -244,9 +257,10 @@ def color_by_days_and_column(row):
 # Apply the color formatting based on 'Days' index and column name
 df_styled = df_reset.style.apply(color_by_days_and_column, axis=1)
 
-st.title("Alcohol Consumption Data Table")
-st.write("Daily consumption data means")
-st.dataframe(df_styled)
+with col4:
+    st.title("Daily Intake Data Table")
+    st.write("Daily consumption data means")
+    st.dataframe(df_styled)
 
 # Calculate means and standard errors for bar plot
 mean_pre_veh = np.mean(pre_veh_flat)
@@ -292,11 +306,13 @@ ax.set_ylabel('Mean Intake (grams)')
 ax.set_axisbelow(True)  # This ensures that grid lines are drawn behind bars
 ax.grid(True, which='both', axis='y', linestyle='-', alpha=0.2)  # Set opacity of grid lines on y-axis
 
-st.title('Prior Treatment Phase')
-st.write('Error bars representing SEM')
+with col3:
+    st.title('Prior Treatment Phase')
+    st.write('Groups were determined as not significantly different from one another prior to vehicle or drug assignments.')
+    st.write('Error bars representing SEM')
 
-# Display the plot in Streamlit
-st.pyplot(fig)
+    # Display the plot in Streamlit
+    st.pyplot(fig)
 
 # Calculate means and standard errors for bar plot
 mean_pst_veh = np.mean(pst_veh_flat)
@@ -353,16 +369,14 @@ ax.text(x=.78, y=.85, s="""*p < 0.05""",
 ax.text(x=.699, y=.55, s="""*""", 
         transform=fig.transFigure, ha='left', fontsize=15, alpha=.7)
 
-st.title('During Treatment Phase')
-st.write(f'Error bars representing SEM & Wilcoxon Signed-Rank test for p-val')
-st.write(f'p-val = {p_value}')
+with col3:
+    st.title('During Treatment Phase')
+    st.write('Since group datasets were determined to not follow normal distributions, a non-parametric statistical test was used.')
+    st.write(f'Error bars representing SEM & Wilcoxon Signed-Rank test for p-val')
+    st.write(f'p-val = {p_value}')
 
-# Display the plot in Streamlit
-st.pyplot(fig)
-
-
-st.title('Daily Alcohol Intake')
-st.write('Error bars representing SEM & Wilcoxon Signed-Rank test for p-val')
+    # Display the plot in Streamlit
+    st.pyplot(fig)
 
 pre_days = [*range(1,17,1)]
 pst_days = [*range(16,28,1)]
@@ -401,7 +415,7 @@ mpl.rcParams['ytick.minor.size'] = 0
 
 plt.style.use('dark_background')
 
-fig, ax = plt.subplots(figsize=(14, 10))
+fig, ax = plt.subplots(figsize=(12, 8))
 ax.text(x=.82, y=.85, s="""*p < 0.05""", 
         transform=fig.transFigure, ha='left', fontsize=13, alpha=.7)
 ax.text(x=.6172, y=.75, s="""*""", 
@@ -423,10 +437,6 @@ ax.text(x=.8324, y=.62, s="""*""",
 ax.text(x=.8593, y=.6, s="""*""", 
         transform=fig.transFigure, ha='left', fontsize=15, alpha=.7)
 
-plt.title("Liquid Alcohol Consumption")
-plt.xlabel("Days of Alcohol Access")
-plt.ylabel("Amount Consumed (grams)")
-
 plt.xticks([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27],
            [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27])
 
@@ -444,7 +454,17 @@ plt.errorbar(pst_days, pst_drg_av_list, color='#FC4F30', label = "drug group aft
               elinewidth=0.7, capsize=1.5)
 plt.legend(loc='upper left')
 
-# Use st.pyplot to display matplotlib figures
-st.pyplot(fig)
+with col4:
+    st.title('Daily Alcohol Intake')
+    st.write('A significant difference was found between treatment groups, data per day was also analyzed for statistically significant differences.')
+    st.write('')
+    st.write('Error bars representing SEM & Wilcoxon Signed-Rank test for p-val')
+
+    plt.title("Liquid Alcohol Consumption")
+    plt.xlabel("Days of Alcohol Access")
+    plt.ylabel("Amount Consumed (grams)")
+
+    # Use st.pyplot to display matplotlib figures
+    st.pyplot(fig)
 
 
